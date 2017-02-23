@@ -1,0 +1,131 @@
+---
+- hosts: all
+  become: yes
+  tasks:
+    - name: Stop marathon
+      service: name=marathon state=stopped
+
+- hosts: all
+  become: yes
+  tasks:
+    - name: Stop mesos-slave
+      service: name=mesos-slave state=stopped
+
+- hosts: all
+  serial: 1
+  become: yes
+  tasks:
+    - name: Stop mesos-master
+      service: name=mesos-master state=stopped
+
+- hosts: all
+  tasks:
+    - name: Wait mesos-master clean
+      pause: seconds=10
+
+- hosts: all
+  serial: 1
+  become: yes
+  tasks:
+    - name: Set cleanup mode
+      copy: content="cleanup" dest=/etc/mesos-slave/recovery
+
+    - name: Run cleanup
+      shell: /usr/bin/mesos-init-wrapper slave || continue
+
+    - name: Unset cleanup mode
+      file: name=/etc/mesos-slave/recovery state=absent
+
+- hosts: all
+  serial: 1
+  become: yes
+  tasks:
+    - name: Stop zookeeper
+      service: name=zookeeper state=stopped
+
+    - name: Cleanup zookeeper snapshots
+      file: path=/var/lib/zookeeper/version-2 state=absent
+
+- hosts: all
+  become: yes
+  vars_files:
+    - defaults/main.yml
+  tasks:
+    - name: Generate zoo.cfg file
+      template: 
+        src=zoo.cfg.j2
+        dest={{ zookeeper_config_file }}
+
+    - name: Generate myid file
+      template:
+        src=myid.j2
+        dest={{ zookeeper_myid_file }}
+
+    - name: Generate mesos zk file
+      template:
+        src=mesos_zk.j2
+        dest={{ mesos_zookeeper_file }}
+
+    - name: Generate mesos quorum file
+      template:
+        src=mesos_quorum.j2
+        dest={{ mesos_quorum_file }}
+
+    - name: Generate mesos master file
+      template:
+        src=mesos_zk.j2
+        dest={{ marathon_master_file }}
+
+    - name: Generate marathon zk file
+      template:
+        src=marathon_zk.j2
+        dest={{ marathon_zookeeper_file }}
+
+- hosts: all
+  serial: 1
+  become: yes
+  tasks:
+    - name: Start zookeeper
+      service: name=zookeeper state=started
+
+- hosts: all
+  tasks:
+    - name: Wait zookeeper ready
+      pause: seconds=10
+
+- hosts: all
+  serial: 1
+  become: yes
+  tasks:
+    - name: Start mesos-master
+      service: name=mesos-master state=started
+
+- hosts: all
+  tasks:
+    - name: Wait mesos-master ready
+      pause: seconds=10
+
+- hosts: all
+  become: yes
+  tasks:
+    - name: Start mesos-slave
+      service: name=mesos-slave state=started
+
+- hosts: all
+  become: yes
+  tasks:
+    - name: Wait mesos-slave ready
+      pause: seconds=10
+
+- hosts: all
+  become: yes
+  tasks:
+    - name: Start marathon
+      service: name=marathon state=started
+
+- hosts: all
+  become: yes
+  tasks:
+    - name: Wait marathon ready
+      pause: seconds=10
+

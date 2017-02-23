@@ -1,0 +1,21 @@
+tickTime=2000
+initLimit=10
+syncLimit=5
+dataDir=/var/lib/zookeeper
+# dataLogDir=/var/log/zookeeper
+clientPort=2181
+# set auto clean log and snapshots, 6h
+autopurge.purgeInterval=6
+# set remain count when auto clean works
+autopurge.snapRetainCount=5
+
+{% if hostvars[inventory_hostname].action == 'delete' %}
+server.1={{hostvars[inventory_hostname].awshost}}:2888:3888
+{% else %}
+{% for item in play_hosts %}
+{% if hostvars[item].action != 'delete' %}
+server.{{ play_hosts.index(item) + 1 }}={{hostvars[item].awshost}}:2888:3888
+{% endif %}
+{% endfor %}
+{% endif %}
+

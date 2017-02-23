@@ -1,0 +1,21 @@
+---
+delete_mode: "{{ hostvars[inventory_hostname].action == 'delete' }}"
+
+cluster_endpoint: "zk://{{ play_hosts|map('extract', hostvars)|rejectattr('action', 'equalto', 'delete')|map(attribute='awshost')|join(':2181,') + ':2181' }}"
+standby_endpoint: "zk://{{ hostvars[inventory_hostname].awshost }}:2181"
+cluster_nodes: "{{ play_hosts|map('extract', hostvars)|rejectattr('action', 'equalto', 'delete')|map(attribute='awshost')|list|length }}"
+
+zookeeper_endpoint: "{{ standby_endpoint if delete_mode else cluster_endpoint }}"
+zookeeper_quorum: "{{ (1 + (0 if delete_mode else cluster_nodes|int/2))|int }}"
+zookeeper_myid: "{{ 1 + (0 if delete_mode else play_hosts.index(inventory_hostname)) }}"
+
+zookeeper_config_file: "/etc/zookeeper/conf/zoo.cfg"
+zookeeper_myid_file: "/var/lib/zookeeper/myid"
+mesos_zookeeper_file: "/etc/mesos/zk"
+mesos_quorum_file: "/etc/mesos-master/quorum"
+marathon_master_file: "/etc/marathon/conf/master"
+marathon_zookeeper_file: "/etc/marathon/conf/zk"
+
+mesos_zookeeper_path: "{{ zookeeper_endpoint }}/mesos"
+marathon_zookeeper_path: "{{ zookeeper_endpoint }}/marathon"
+
