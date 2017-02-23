@@ -1,0 +1,84 @@
+$def with(ret,gpus)
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>    ATS    </title>
+<script>  
+  function  handleFiles0(files)  
+  {  
+    if(files.length)  
+    {  
+       var file = files[0];  
+       var reader = new FileReader();  
+       reader.onload = function()  
+       {  
+           document.getElementById("solvercontent").innerHTML = this.result;
+       };  
+       reader.readAsText(file);  
+    }  
+  }
+
+  function  handleFiles1(files)  
+  {  
+    if(files.length)  
+    {  
+       var file = files[0];  
+       var reader = new FileReader();  
+       reader.onload = function()  
+       {  
+           document.getElementById("netcontent").innerHTML = this.result;
+       };  
+       reader.readAsText(file);  
+    }  
+  }
+
+  function  handleFiles2(files)  
+  {  
+    if(files.length)  
+    {  
+       var file = files[0];  
+       var reader = new FileReader();  
+       reader.onload = function()  
+       {  
+           document.getElementById("layercontent").innerHTML = this.result;
+       };  
+       reader.readAsText(file);  
+    }  
+  }
+
+  function ok()
+  {
+    document.f2.tamid.value=document.f1.devinfo.value;
+  }
+
+  </script>
+</head>
+
+<body bgcolor="#99ccff">
+<form name ="f1">
+Your own task ID:<input type="input" id="devinfo" value=$ret><br></br>
+</form>
+
+<form name ="f2" method="post" action="/dglearner/v1/uploadfile">
+Your solver prototxt file:</br>
+<input type="file" name="solverfname" id="sfileField" size="28" onchange="handleFiles0(this.files)"/>
+<textarea name="solverfdata" id="solvercontent" style="display:none;" /></textarea><br></br>
+
+Your net prototxt file:</br>
+<input type="file" name="netfname" id="nfileField" size="28" onchange="handleFiles1(this.files)"/><br></br>
+<textarea name="netfdata" id="netcontent" style="display:none;" /></textarea>
+
+Your python_layer file:</br>
+<input type="file" name="layerfname" id="nfileField" size="28" onchange="handleFiles2(this.files)"/><br></br>
+<textarea id="layercontent" name="layerfdata" style="display:none;" /></textarea>
+
+Your LMDB file from  API:</br>
+<textarea name= "lmdbf"rows=1 cols=60 readOnly=True >http://192.168.2.148:8000/</textarea><br></br>
+
+<textarea id="tamid" name="mid" style="display:none;" /></textarea>
+<input type="hidden" name="gpus" value=$gpus>
+<input type="submit" name="submit" value="file upload" onClick="ok()" />
+</form>
+
+</body>
+</html>

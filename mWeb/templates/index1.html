@@ -1,0 +1,34 @@
+$def with(reqrtn,gpus)
+<html>
+<head>
+<title>    ATS    </title> 
+</head>
+
+<body bgcolor="#99ccff">
+<form name ="f1">
+    <input type="input" id="devinfo" rows=100 cols=100 value=$reqrtn>
+    <input type="inpug" id="idgpus" rows=100 clos=100 value=$gpus>
+    <script language="JavaScript" type="text/javascript">
+    document.getElementById("devinfo").innerHTML =ok1();
+    document.getElementById("idgpus").innerHTML =ok1();
+    function ok1()
+    {
+    var x=document.getElementById("devinfo")
+    var y=document.getElementById("idgpus")
+    if(x.value == "error"){
+        alert("error")
+        window.history.back('http://192.168.2.148:8084/dglearner/v1/getdevice')
+    }
+    else
+    {
+        var mid=x.value
+        var gpus=y.value
+        window.location.href='http://192.168.2.148:8084/dglearner/v1/uploadfile?mid='+mid+"&gpus="+gpus;
+    }
+}
+</script>    
+
+</body>
+</html>
+
+

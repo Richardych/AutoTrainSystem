@@ -1,0 +1,50 @@
+$def with(devicelookgood,deviceinfo)
+<html>
+<head>
+<title>    ATS    </title> 
+</head>
+
+<script language="JavaScript" type="text/javascript">
+function ok()
+{
+  document.f2.devinfo.value=document.f1.idhid.value;
+  //var js1 = document.getElementById("devinfo");
+  //alert(js1.value["totaldic"]);
+}
+</script>
+
+<body bgcolor="#99ccff">
+<form name ="f1" method="" action="">
+    <br />
+    <label for="txt_caff2"><B>Resource Info:</label></br>
+    <textarea name="tare1" id="ta1" rows="15" cols="180" readOnly=true >$devicelookgood</textarea><br></br>
+    <textarea name="tare2" id="idhid" style="display:none;" />$deviceinfo</textarea>
+    <script language="JavaScript" type="text/javascript">
+    document.getElementById("ta1").innerHTML =setValue();
+    function setValue()
+    {
+      var xxi = document.getElementById("ta1").value;
+      var str = JSON.stringify(xxi);
+      var obj2 = eval('(' + str + ')');
+      return obj2;
+    }
+    </script>
+</form>
+
+
+<form  name="f2" method="post" action="/dglearner/v1/reqresource">
+    <br />
+    <label for=""><B>Request Resource:</label></br>
+    cpus&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<input type="text" name="cpus" value=1 ></br></br>
+    gpus&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<input type="text" name="gpus" value=1 ></br></br>
+    mem&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<input type="text" name="mem" value=128.0 ></br></br>
+    disk&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<input type="text" name="disk" value=0 ></br></br>
+    instances&nbsp<input type="text" name="instances" value=1 ></br>
+    <input type="hidden" name="devinfo">
+    <input type="submit" value="Submit" onClick="ok()">
+</form>
+
+
+
+</body>
+</html>

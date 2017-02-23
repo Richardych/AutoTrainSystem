@@ -1,0 +1,29 @@
+$def with(trainret)
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>    ATS    </title>
+</head>
+
+<body bgcolor="#99ccff">
+<form name ="f1">
+<input type="input" id="idmid" rows=100 cols=100 value=$trainret>
+    <script language="JavaScript" type="text/javascript">
+    document.getElementById("idmid").innerHTML =ok1();
+    function ok1()
+    {
+    var x=document.getElementById("idmid")
+    if(x.value == "error"){
+        alert("error,please check the task id and the upload files")
+        window.history.back(-1)
+    }
+    else
+    {
+        var mid=x.value
+        window.location.href='http://192.168.2.148:8084/dglearner/v1/showlog?mid='+mid;
+    }
+}
+</script>
+
+</body>
+</html>
