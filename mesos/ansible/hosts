@@ -1,5 +1,4 @@
 [all:vars]
-ansible_sudo_pass="dell@2016"
+ansible_sudo_pass="ych.123"
 [hosts]
-192.168.2.148  awshost=192.168.2.148 action=add ansible_connection=ssh  ansible_user=dell ansible_ssh_pass="dell@2016"
-192.168.2.21  awshost=192.168.2.21 action=add ansible_connection=ssh  ansible_user=dell ansible_ssh_pass="dell@2016"
+192.168.1.250  awshost=192.168.1.250 action=add ansible_connection=ssh  ansible_user=superhui ansible_ssh_pass="ych.123"
